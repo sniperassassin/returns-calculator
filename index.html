@@ -1,9 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
+  <!-- Primary Meta Tags -->
+  <title>Returns Calculator - SIP & Lumpsum Investment Analysis</title>
+  <meta name="title" content="Returns Calculator - SIP & Lumpsum Investment Analysis">
+  <meta name="description"
+    content="Accurately calculate SIP and Lumpsum returns. Visualize your investments and profits using interactive pie charts and year-wise return summaries.">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://returns-calculator.co.in/">
+  <meta property="og:title" content="Returns Calculator - SIP & Lumpsum Investment Analysis">
+  <meta property="og:description"
+    content="Accurately calculate SIP and Lumpsum returns. Visualize your investments and profits using interactive pie charts and year-wise return summaries.">
+  <meta property="og:image" content="http://returns-calculator.co.in/preview-image.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="http://returns-calculator.co.in/">
+  <meta property="twitter:title" content="Returns Calculator - SIP & Lumpsum Investment Analysis">
+  <meta property="twitter:description"
+    content="Easily analyze SIP & Lumpsum investments with graphical insights. Get a clear view of returns with pie charts and year-wise breakdowns.">
+  <meta property="twitter:image" content="http://returns-calculator.co.in/preview-image.jpg">
+
+  <!-- Favicon & Viewport -->
+  <link rel="icon" href="./favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Investment Returns Calculator</title>
+
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -11,9 +37,11 @@
       background-color: #f8f9fa;
       font-family: 'Segoe UI', sans-serif;
     }
+
     .form-label {
       font-weight: 600;
     }
+
     input[type=range] {
       appearance: none;
       width: 100%;
@@ -22,6 +50,7 @@
       background: #e0e0e0;
       position: relative;
     }
+
     input[type=range]::before {
       content: '';
       position: absolute;
@@ -32,6 +61,7 @@
       width: var(--progress, 0%);
       z-index: 1;
     }
+
     input[type=range]::-webkit-slider-thumb {
       appearance: none;
       width: 16px;
@@ -43,6 +73,7 @@
       z-index: 2;
       margin-top: -5px;
     }
+
     input[type=range]::-moz-range-thumb {
       width: 16px;
       height: 16px;
@@ -50,6 +81,7 @@
       background: #0d6efd;
       cursor: pointer;
     }
+
     .range-labels {
       display: flex;
       justify-content: space-between;
@@ -58,43 +90,56 @@
       margin-top: -0.25rem;
       margin-bottom: 0.5rem;
     }
+
     .result-card {
       background: white;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
       padding: 1rem;
     }
+
     .summary-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.5rem;
     }
+
     .summary-row span:first-child {
       font-weight: 600;
     }
+
     .chart-box canvas {
       max-width: 100%;
       height: auto;
     }
+
     .section-title {
       font-size: 1.25rem;
       font-weight: 600;
       color: #6c63ff;
       margin-bottom: 1rem;
     }
+
     body.fade-reset {
       animation: fadeFlash 0.5s;
     }
+
     @keyframes fadeFlash {
-      0% { background-color: #ffd; }
-      100% { background-color: inherit; }
+      0% {
+        background-color: #ffd;
+      }
+
+      100% {
+        background-color: inherit;
+      }
     }
 
     .dark-mode {
       background-color: #121212 !important;
       color: #e4e4e4 !important;
     }
+
     .dark-mode .form-control,
     .dark-mode .form-check-label,
     .dark-mode .form-label {
@@ -102,243 +147,255 @@
       color: #e4e4e4 !important;
       border-color: #333 !important;
     }
+
     .dark-mode .result-card {
       background-color: #1e1e1e !important;
       color: #e4e4e4;
     }
+
     .dark-mode .btn {
       border-color: #555;
     }
+
     .dark-mode .section-title {
       color: #bb86fc;
     }
   </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6322294096281900"
+     crossorigin="anonymous">
+  </script>
 </head>
+
 <body>
-<div class="container py-4">
-  <h1 class="text-center mb-4">💸 Investment Returns Calculator</h1>
-  <div class="form-check form-switch mb-3 d-flex align-items-center gap-2">
-    <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch" onchange="toggleDarkMode(this)">
-    <label class="form-check-label" for="darkModeSwitch">🌗 Dark Mode</label>
-  </div>
+  <div class="container py-4">
+    <h1 class="text-center mb-4">💸 Investment Returns Calculator</h1>
+    <div class="form-check form-switch mb-3 d-flex align-items-center gap-2">
+      <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch" onchange="toggleDarkMode(this)">
+      <label class="form-check-label" for="darkModeSwitch">🌗 Dark Mode</label>
+    </div>
 
-  <div class="mb-3 d-flex gap-4">
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="type" value="lumpsum" id="lumpsumRadio" checked onchange="updateAmountRange()">
-      <label class="form-check-label" for="lumpsumRadio">Lumpsum</label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="type" value="sip" id="sipRadio" onchange="updateAmountRange()">
-      <label class="form-check-label" for="sipRadio">SIP</label>
-    </div>
-  </div>
-
-  <div class="row g-4">
-    <div class="col-md-4">
-      <label for="amount" class="form-label" id="amount-label">Total Investment (₹)</label>
-      <input type="number" class="form-control mb-1" id="amount" value="800000" onchange="syncSlider('amount')">
-      <input type="range" class="form-range" id="amount-slider" onchange="syncInput('amount')">
-      <div class="range-labels" id="amount-range-labels"><span>10K</span><span>10Cr</span></div>
-    </div>
-    <div class="col-md-4">
-      <label for="rate" class="form-label">Expected Return Rate (% p.a)</label>
-      <input type="number" class="form-control mb-1" id="rate" value="12" step="0.1" onchange="syncSlider('rate')">
-      <input type="range" class="form-range" id="rate-slider" min="1" max="100" step="0.1" value="12" onchange="syncInput('rate')">
-      <div class="range-labels"><span>1%</span><span>100%</span></div>
-    </div>
-    <div class="col-md-4">
-      <label for="years" class="form-label">Investment Time Period (Years)</label>
-      <input type="number" class="form-control mb-1" id="years" value="10" step="1" onchange="syncSlider('years')">
-      <input type="range" class="form-range" id="years-slider" min="1" max="50" step="1" value="10" onchange="syncInput('years')">
-      <div class="range-labels"><span>1</span><span>50</span></div>
-    </div>
-  </div>
-
-  <div class="d-flex justify-content-between mt-4">
-    <button class="btn btn-primary" onclick="calculate()">Calculate</button>
-    <button class="btn btn-outline-secondary" onclick="resetAll()">Reset All</button>
-  </div>
-
-  <div class="row g-4 mt-4">
-    <div class="col-md-6">
-      <div class="result-card">
-        <div class="section-title">📊 Investment Summary</div>
-        <div class="summary-row"><span>Invested Amount (₹):</span> <span id="invested"></span></div>
-        <div class="summary-row"><span>Estimated Returns (₹):</span> <span id="returns"></span></div>
-        <div class="summary-row"><span>Total Value (₹):</span> <span id="total"></span></div>
+    <div class="mb-3 d-flex gap-4">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="type" value="lumpsum" id="lumpsumRadio" checked
+          onchange="updateAmountRange()">
+        <label class="form-check-label" for="lumpsumRadio">Lumpsum</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="type" value="sip" id="sipRadio"
+          onchange="updateAmountRange()">
+        <label class="form-check-label" for="sipRadio">SIP</label>
       </div>
     </div>
-    <div class="col-md-6 chart-box">
-      <canvas id="pieChart"></canvas>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <label for="amount" class="form-label" id="amount-label">Total Investment (₹)</label>
+        <input type="number" class="form-control mb-1" id="amount" value="800000" onchange="syncSlider('amount')">
+        <input type="range" class="form-range" id="amount-slider" onchange="syncInput('amount')">
+        <div class="range-labels" id="amount-range-labels"><span>10K</span><span>10Cr</span></div>
+      </div>
+      <div class="col-md-4">
+        <label for="rate" class="form-label">Expected Return Rate (% p.a)</label>
+        <input type="number" class="form-control mb-1" id="rate" value="12" step="0.1" onchange="syncSlider('rate')">
+        <input type="range" class="form-range" id="rate-slider" min="1" max="100" step="0.1" value="12"
+          onchange="syncInput('rate')">
+        <div class="range-labels"><span>1%</span><span>100%</span></div>
+      </div>
+      <div class="col-md-4">
+        <label for="years" class="form-label">Investment Time Period (Years)</label>
+        <input type="number" class="form-control mb-1" id="years" value="10" step="1" onchange="syncSlider('years')">
+        <input type="range" class="form-range" id="years-slider" min="1" max="50" step="1" value="10"
+          onchange="syncInput('years')">
+        <div class="range-labels"><span>1</span><span>50</span></div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn btn-primary" onclick="calculate()">Calculate</button>
+      <button class="btn btn-outline-secondary" onclick="resetAll()">Reset All</button>
+    </div>
+
+    <div class="row g-4 mt-4">
+      <div class="col-md-6">
+        <div class="result-card">
+          <div class="section-title">📊 Investment Summary</div>
+          <div class="summary-row"><span>Invested Amount (₹):</span> <span id="invested"></span></div>
+          <div class="summary-row"><span>Estimated Returns (₹):</span> <span id="returns"></span></div>
+          <div class="summary-row"><span>Total Value (₹):</span> <span id="total"></span></div>
+        </div>
+      </div>
+      <div class="col-md-6 chart-box">
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <div class="section-title">📈 Year-wise Growth Chart</div>
+      <canvas id="growthChart"></canvas>
     </div>
   </div>
-
-  <div class="mt-5">
-    <div class="section-title">📈 Year-wise Growth Chart</div>
-    <canvas id="growthChart"></canvas>
-  </div>
-</div>
-<script>
-  function syncSlider(id) {
-    const slider = document.getElementById(`${id}-slider`);
-    const value = document.getElementById(id).value;
-    slider.value = value;
-    updateSliderVisual(slider);
-    calculate();
-  }
-  function syncInput(id) {
-    const slider = document.getElementById(`${id}-slider`);
-    const value = slider.value;
-    document.getElementById(id).value = value;
-    updateSliderVisual(slider);
-    calculate();
-  }
-  function updateSliderVisual(slider) {
-    const value = slider.value;
-    const percent = ((value - slider.min) / (slider.max - slider.min)) * 100;
-    slider.style.setProperty('--progress', `${percent}%`);
-  }
-  function updateAmountRange() {
-    const isSIP = document.querySelector('input[name="type"]:checked').value === 'sip';
-    const slider = document.getElementById('amount-slider');
-    const labelDiv = document.getElementById('amount-range-labels');
-    const amountInput = document.getElementById('amount');
-
-    if (isSIP) {
-      slider.min = 500;
-      slider.max = 200000;
-      slider.step = 500;
-      slider.value = 10000;
-      amountInput.value = 10000;
-      labelDiv.innerHTML = '<span>500</span><span>2L</span>';
-    } else {
-      slider.min = 10000;
-      slider.max = 100000000;
-      slider.step = 10000;
-      slider.value = 800000;
-      amountInput.value = 800000;
-      labelDiv.innerHTML = '<span>10K</span><span>10Cr</span>';
+  <script>
+    function syncSlider(id) {
+      const slider = document.getElementById(`${id}-slider`);
+      const value = document.getElementById(id).value;
+      slider.value = value;
+      updateSliderVisual(slider);
+      calculate();
     }
-    updateSliderVisual(slider);
-    calculate();
-  }
-  function calculateLumpsum(p, r, y) {
-    const total = p * Math.pow(1 + r / 100, y);
-    const returns = total - p;
-    return [p, returns, total];
-  }
-  function calculateSIP(m, r, y) {
-    const n = y * 12;
-    const i = r / (12 * 100);
-    const total = m * (((Math.pow(1 + i, n) - 1) / i) * (1 + i));
-    const invested = m * n;
-    return [invested, total - invested, total];
-  }
-  function generateProjection(type, amount, rate, years) {
-    const values = [];
-    if (type === 'lumpsum') {
-      for (let y = 1; y <= years; y++) values.push(amount * Math.pow(1 + rate / 100, y));
-    } else {
-      const i = rate / (12 * 100);
-      let total = 0;
-      for (let m = 1; m <= years * 12; m++) {
-        total = total * (1 + i) + amount;
-        if (m % 12 === 0) values.push(total);
+    function syncInput(id) {
+      const slider = document.getElementById(`${id}-slider`);
+      const value = slider.value;
+      document.getElementById(id).value = value;
+      updateSliderVisual(slider);
+      calculate();
+    }
+    function updateSliderVisual(slider) {
+      const value = slider.value;
+      const percent = ((value - slider.min) / (slider.max - slider.min)) * 100;
+      slider.style.setProperty('--progress', `${percent}%`);
+    }
+    function updateAmountRange() {
+      const isSIP = document.querySelector('input[name="type"]:checked').value === 'sip';
+      const slider = document.getElementById('amount-slider');
+      const labelDiv = document.getElementById('amount-range-labels');
+      const amountInput = document.getElementById('amount');
+
+      if (isSIP) {
+        slider.min = 500;
+        slider.max = 200000;
+        slider.step = 500;
+        slider.value = 10000;
+        amountInput.value = 10000;
+        labelDiv.innerHTML = '<span>500</span><span>2L</span>';
+      } else {
+        slider.min = 10000;
+        slider.max = 100000000;
+        slider.step = 10000;
+        slider.value = 800000;
+        amountInput.value = 800000;
+        labelDiv.innerHTML = '<span>10K</span><span>10Cr</span>';
       }
+      updateSliderVisual(slider);
+      calculate();
     }
-    return values;
-  }
-  function formatINR(n) {
-    return `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
-  }
-  function resetAll() {
-    ['amount', 'rate', 'years'].forEach(id => {
-      document.getElementById(id).value = document.getElementById(`${id}-slider`).value = id === 'rate' ? 12 : id === 'years' ? 10 : 800000;
-    });
-    document.querySelector('input[name="type"][value="lumpsum"]').checked = true;
-    calculate();
-  }
-  let pieChart, barChart;
-  function calculate() {
-    const type = document.querySelector('input[name="type"]:checked').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const rate = parseFloat(document.getElementById('rate').value);
-    const years = parseInt(document.getElementById('years').value);
-    const [invested, returns, total] = type === 'lumpsum' ? calculateLumpsum(amount, rate, years) : calculateSIP(amount, rate, years);
-    const projection = generateProjection(type, amount, rate, years);
+    function calculateLumpsum(p, r, y) {
+      const total = p * Math.pow(1 + r / 100, y);
+      const returns = total - p;
+      return [p, returns, total];
+    }
+    function calculateSIP(m, r, y) {
+      const n = y * 12;
+      const i = r / (12 * 100);
+      const total = m * (((Math.pow(1 + i, n) - 1) / i) * (1 + i));
+      const invested = m * n;
+      return [invested, total - invested, total];
+    }
+    function generateProjection(type, amount, rate, years) {
+      const values = [];
+      if (type === 'lumpsum') {
+        for (let y = 1; y <= years; y++) values.push(amount * Math.pow(1 + rate / 100, y));
+      } else {
+        const i = rate / (12 * 100);
+        let total = 0;
+        for (let m = 1; m <= years * 12; m++) {
+          total = total * (1 + i) + amount;
+          if (m % 12 === 0) values.push(total);
+        }
+      }
+      return values;
+    }
+    function formatINR(n) {
+      return `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+    }
+    function resetAll() {
+      ['amount', 'rate', 'years'].forEach(id => {
+        document.getElementById(id).value = document.getElementById(`${id}-slider`).value = id === 'rate' ? 12 : id === 'years' ? 10 : 800000;
+      });
+      document.querySelector('input[name="type"][value="lumpsum"]').checked = true;
+      calculate();
+    }
+    let pieChart, barChart;
+    function calculate() {
+      const type = document.querySelector('input[name="type"]:checked').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const rate = parseFloat(document.getElementById('rate').value);
+      const years = parseInt(document.getElementById('years').value);
+      const [invested, returns, total] = type === 'lumpsum' ? calculateLumpsum(amount, rate, years) : calculateSIP(amount, rate, years);
+      const projection = generateProjection(type, amount, rate, years);
 
-    document.getElementById('amount-label').innerText = type === 'lumpsum' ? 'Total Investment (₹)' : 'Monthly SIP Amount (₹)';
-    document.getElementById('invested').innerText = formatINR(invested);
-    document.getElementById('returns').innerText = formatINR(returns);
-    document.getElementById('total').innerText = formatINR(total);
+      document.getElementById('amount-label').innerText = type === 'lumpsum' ? 'Total Investment (₹)' : 'Monthly SIP Amount (₹)';
+      document.getElementById('invested').innerText = formatINR(invested);
+      document.getElementById('returns').innerText = formatINR(returns);
+      document.getElementById('total').innerText = formatINR(total);
 
-    if (pieChart) pieChart.destroy();
-    pieChart = new Chart(document.getElementById('pieChart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Invested', 'Returns'],
-        datasets: [{ data: [invested, returns], backgroundColor: ['#00bfff', '#32cd32'] }]
-      },
-      options: { plugins: { legend: { position: 'bottom' } } }
-    });
-
-    if (barChart) barChart.destroy();
-    barChart = new Chart(document.getElementById('growthChart'), {
-      type: 'bar',
-      data: {
-        labels: projection.map((_, i) => `Year ${i + 1}`),
-        datasets: [{ label: 'Value (₹)', data: projection, backgroundColor: '#6c63ff' }]
-      },
-      options: {
-        plugins: {
-          tooltip: {
-            callbacks: { label: ctx => formatINR(ctx.raw) }
-          },
-          legend: { display: false }
+      if (pieChart) pieChart.destroy();
+      pieChart = new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Invested', 'Returns'],
+          datasets: [{ data: [invested, returns], backgroundColor: ['#00bfff', '#32cd32'] }]
         },
-        scales: {
-          y: {
-            ticks: {
-              callback: value => `₹${value.toLocaleString('en-IN')}`
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+
+      if (barChart) barChart.destroy();
+      barChart = new Chart(document.getElementById('growthChart'), {
+        type: 'bar',
+        data: {
+          labels: projection.map((_, i) => `Year ${i + 1}`),
+          datasets: [{ label: 'Value (₹)', data: projection, backgroundColor: '#6c63ff' }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: { label: ctx => formatINR(ctx.raw) }
+            },
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              ticks: {
+                callback: value => `₹${value.toLocaleString('en-IN')}`
+              }
             }
           }
         }
-      }
-    });
-  }
-  function resetAll() {
-    const resetArea = document.querySelector('body');
-    resetArea.classList.add('fade-reset');
+      });
+    }
+    function resetAll() {
+      const resetArea = document.querySelector('body');
+      resetArea.classList.add('fade-reset');
 
-    document.getElementById('lumpsumRadio').checked = true;
-    document.getElementById('sipRadio').checked = false;
+      document.getElementById('lumpsumRadio').checked = true;
+      document.getElementById('sipRadio').checked = false;
 
-    document.getElementById('amount').value = 800000;
-    document.getElementById('rate').value = 12;
-    document.getElementById('years').value = 10;
+      document.getElementById('amount').value = 800000;
+      document.getElementById('rate').value = 12;
+      document.getElementById('years').value = 10;
 
-    document.getElementById('amount-slider').value = 800000;
-    document.getElementById('rate-slider').value = 12;
-    document.getElementById('years-slider').value = 10;
+      document.getElementById('amount-slider').value = 800000;
+      document.getElementById('rate-slider').value = 12;
+      document.getElementById('years-slider').value = 10;
 
-    updateSliderVisual(document.getElementById('amount-slider'));
-    updateSliderVisual(document.getElementById('rate-slider'));
-    updateSliderVisual(document.getElementById('years-slider'));
+      updateSliderVisual(document.getElementById('amount-slider'));
+      updateSliderVisual(document.getElementById('rate-slider'));
+      updateSliderVisual(document.getElementById('years-slider'));
 
-    updateAmountRange();
-    setTimeout(() => {
-      resetArea.classList.remove('fade-reset');
-    }, 500);
-  }
-  function toggleDarkMode(checkbox) {
-    document.body.classList.toggle('dark-mode', checkbox.checked);
-  }
-  calculate();
-  window.onload = () => {
-    updateAmountRange();
-    updateSliderVisual(document.getElementById('rate-slider'));
-    updateSliderVisual(document.getElementById('years-slider'));
-  };
-</script>
+      updateAmountRange();
+      setTimeout(() => {
+        resetArea.classList.remove('fade-reset');
+      }, 500);
+    }
+    function toggleDarkMode(checkbox) {
+      document.body.classList.toggle('dark-mode', checkbox.checked);
+    }
+    calculate();
+    window.onload = () => {
+      updateAmountRange();
+      updateSliderVisual(document.getElementById('rate-slider'));
+      updateSliderVisual(document.getElementById('years-slider'));
+    };
+  </script>
 </body>
+
 </html>
